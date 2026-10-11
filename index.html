@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Saffron Table | Smart Restaurant Management</title>
+<style>
+:root{--cream:#f6f1e6;--green:#5c1a2b;--orange:#c9852f;--gold:#e3b573;--ink:#2a2320;--muted:#8a7f74;--white:#fff;--line:#e6ddcd}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,sans-serif;line-height:1.45}button,input,select{font:inherit}button{cursor:pointer}
+header{position:sticky;top:0;z-index:10;background:#f6f1e6f2;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{max-width:1080px;margin:auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:15px}.logo{font:700 21px/1 Georgia;color:var(--green)}.logo span{color:var(--orange)}
+nav button{border:0;background:transparent;padding:8px 12px;border-radius:6px;color:#59615d;font-size:14px}nav button:hover{background:#f2e6ea;color:var(--green)}
+.menuBtn{display:none;border:1px solid var(--line);background:white;border-radius:6px;padding:8px 11px;font-size:16px;line-height:1}
+.role-user{background:#e5f6ec;color:#227049}.role-admin{background:#e5f0ff;color:#24588f}
+.cart,.primary,.add{border:0;background:var(--green);color:white;border-radius:9px;padding:9px 14px;font-weight:700;font-size:14px}.cart{border-radius:999px}
+main{max-width:1080px;margin:auto;padding:20px 20px 50px}.hero{border-radius:14px;padding:34px;display:grid;grid-template-columns:1.15fr .85fr;gap:26px;align-items:center;color:white;background:linear-gradient(135deg,#2b0f22,#6b1e35 55%,#c9852f)}
+.eyebrow{font-weight:700;color:var(--gold);font-size:13px}.hero h1{font:700 clamp(30px,4vw,42px)/1.08 Georgia;margin:8px 0 10px}.hero p{font-size:16px;line-height:1.55;max-width:520px;margin:0 0 18px}.hero .primary{background:var(--orange);margin-right:6px}.hero .secondary{border:0;border-radius:7px;padding:9px 14px;font-weight:700;font-size:14px;color:var(--green)}
+.card{background:white;border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 4px 14px #1e32280a}.hero .card{color:var(--ink)}
+section{margin-top:34px}.section-title{font:700 27px/1.15 Georgia;margin:4px 0 3px}.sub{color:var(--muted);font-size:14.5px;margin:0 0 16px}.dash{background:var(--green);color:white;border-radius:14px;padding:24px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#ffffff1a;border:1px solid #ffffff26;border-radius:12px;padding:14px}.stat small{color:#d5e1dc;font-size:12.5px}.stat strong{display:block;font:700 26px Georgia;margin:8px 0 2px}.stat span{color:#bde0d1;font-size:12.5px}
+.tablewrap{overflow-x:auto}.tablewrap table{min-width:700px}.tablewrap table{width:100%;border-collapse:collapse}.tablewrap th,.tablewrap td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-size:14px}.tablewrap th{color:var(--muted);font-weight:600}
+.status{display:inline-block;border-radius:99px;padding:4px 9px;font-size:11.5px;font-weight:700}.Pending{background:#fff0cc;color:#8e6500}.Preparing{background:#e5f0ff;color:#24588f}.Ready{background:#e5f6ec;color:#227049}.Completed{background:#e9eceb;color:#55605b}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.food{min-height:0;display:flex;flex-direction:column;padding:16px}.icon{width:48px;height:48px;border-radius:10px;background:#f3e6d2;display:grid;place-items:center;font-size:26px}.food h3{font-size:17px;margin:12px 0 4px}.food p{color:var(--muted);line-height:1.5;font-size:14px;margin:0}.bottom{margin-top:14px;display:flex;justify-content:space-between;align-items:center}.price{font-weight:700;font-size:17px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:5px;font-size:14px}.field.full{grid-column:1/-1}.field input,.field select{padding:11px;border:1px solid #d9ddd8;border-radius:9px;background:white;font-size:14px}.reserve{grid-column:1/-1;border:0;background:var(--orange);color:white;border-radius:9px;padding:12px;font-weight:700}
+.login{position:fixed;inset:0;background:#2b0f22f2;display:grid;place-items:center;z-index:50;padding:20px}.loginbox{width:min(380px,100%);background:white;border-radius:14px;padding:26px}.loginbox h1{font:700 28px Georgia;margin:4px 0 6px;color:var(--green)}.loginbox p{color:var(--muted);font-size:14px;margin:0 0 4px}.loginbox input{width:100%;padding:12px;border:1px solid #d9ddd8;border-radius:7px;margin:6px 0 10px;font-size:14px}.loginbox button{width:100%;padding:12px;border:0;border-radius:7px;background:var(--orange);color:white;font-weight:700}.loginbox #userTab,.loginbox #adminTab{color:white;background:var(--green);font-size:13.5px;padding:9px}
+.drawer{position:fixed;right:-380px;top:0;width:min(360px,92vw);height:100vh;background:white;z-index:30;padding:20px;transition:.3s;overflow:auto;box-shadow:-12px 0 35px #0003}.drawer.open{right:0}.drawer h2{font:700 22px Georgia;margin:4px 0 12px}.overlay{position:fixed;inset:0;background:#0005;z-index:25;display:none}.overlay.show{display:block}.cartrow{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}.qty button{width:26px;height:26px;border:1px solid #ddd;background:white;border-radius:6px}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,120px);background:#202522;color:white;padding:11px 16px;border-radius:10px;font-size:14px;z-index:80;transition:.3s}.toast.show{transform:translate(-50%,0)}
+footer{text-align:center;border-top:1px solid var(--line);padding:22px;color:var(--muted);font-size:13.5px}
+@media(max-width:850px){.menuBtn{display:block}.nav nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--cream);border-bottom:1px solid var(--line);flex-direction:column;padding:8px 20px;gap:2px}.nav nav.show{display:flex}.nav{position:relative;flex-wrap:wrap}nav button{text-align:left;width:100%;border-radius:8px}.hero{grid-template-columns:1fr;padding:26px 22px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){main{padding:12px 12px 40px}section{margin-top:26px}.hero{border-radius:12px;padding:22px 18px}.hero h1{font-size:29px}.hero p{font-size:15px}.dash{border-radius:12px;padding:18px 14px}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:22px}.grid,.form{grid-template-columns:1fr}.field.full,.reserve{grid-column:auto}.section-title{font-size:23px}.food{min-height:0}}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.kpi{background:white;border:1px solid var(--line);border-radius:12px;padding:16px}.kpi .num{font:700 25px Georgia;color:var(--green);display:block;margin-top:5px}.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.quick button{border:1px solid var(--line);background:white;border-radius:8px;padding:9px 12px;font-weight:700;color:var(--green)}.searchbar{display:flex;gap:8px;margin-bottom:14px}.searchbar input{flex:1;padding:11px;border:1px solid #d9ddd8;border-radius:9px}.empty{text-align:center;padding:25px;color:var(--muted)}.rating{color:#a96d15;font-weight:700}@media(max-width:850px){.kpi-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.kpi-grid{grid-template-columns:1fr}.searchbar{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="login" id="login">
+ <div class="loginbox">
+  <div class="eyebrow" style="color:var(--orange)" id="loginEyebrow">User access</div>
+  <h1>Saffron Table</h1>
+  <p id="loginDescription">Sign in to order food and reserve a table.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:15px 0">
+   <button id="userTab" onclick="setLoginRole('user')" style="background:var(--green)">User Login</button>
+   <button id="adminTab" onclick="setLoginRole('admin')" style="background:var(--muted)">Admin Login</button>
+  </div>
+
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Sign in</button>
+
+  <p id="loginError" style="color:var(--orange);font-weight:700"></p>
+ </div>
+</div>
+
+<header><div class="nav"><div class="logo">Saffron<br><span>Table</span></div>
+<button class="menuBtn" id="menuBtn" onclick="toggleMenu()" aria-label="Menu">☰</button>
+<nav id="navLinks">
+<button data-role="user" style="display:none" onclick="go('home')">Home</button>
+<button data-role="admin" style="display:none" onclick="go('dashboard')">Dashboard</button><button data-role="admin" style="display:none" onclick="go('analytics')">Analytics</button>
+<button data-role="admin" style="display:none" onclick="go('management')">Management</button>
+<button data-role="user" style="display:none" onclick="go('menu')">Menu</button>
+<button data-role="user" style="display:none" onclick="go('offers')">Offers</button>
+<button data-role="both" onclick="go('profile')">Profile</button>
+<button data-role="both" onclick="go('orders')">Orders</button>
+<button data-role="both" onclick="go('reservation')">Reservations</button>
+</nav>
+<div style="display:flex;align-items:center;gap:8px">
+ <span id="roleBadge" class="status role-user">USER</span>
+ <button class="cart" id="cartBtn" data-role="user" style="display:none" onclick="openCart()">Cart: <span id="cc">0</span> · ₹<span id="ct">0</span></button>
+ <button class="cart" onclick="logout()" style="background:var(--muted)">Logout</button>
+</div></div></header>
+
+<main>
+<section id="home" class="hero" data-role="user" style="display:none">
+<div><div class="eyebrow">Restaurant management, made simple</div><h1>Better service.<br>Every table.</h1><p>Order food and reserve a table in one simple, responsive workspace.</p><button class="primary" onclick="go('menu')">Order from menu</button> <button class="secondary" onclick="go('reservation')">Reserve a table</button></div>
+<div class="card"><div class="eyebrow" style="color:var(--orange)">Today's special</div><h2 style="font:700 39px Georgia">Butter Paneer</h2><p class="sub">Creamy tomato curry with paneer and aromatic spices.</p><div class="bottom"><span class="price">₹320</span><button class="add" onclick="add(1)">Add to cart</button></div></div>
+</section>
+
+<section id="dashboard" class="dash" data-role="admin" style="display:none;margin-top:0">
+<div class="eyebrow">Live overview</div><h2 class="section-title">Today at a glance</h2>
+<div class="stats"><div class="stat"><small>Sales today</small><strong id="sales">₹0</strong><span>Completed orders</span></div><div class="stat"><small>Orders completed</small><strong id="done">0</strong><span id="progress">0 in progress</span></div><div class="stat"><small>Tables occupied</small><strong>14 / 20</strong><span>70% capacity</span></div></div>
+<div class="card" style="margin-top:18px"><h3 style="font:700 29px Georgia">Recent orders</h3><div class="tablewrap"><table><thead><tr><th>Order</th><th>Guest</th><th>Table</th><th>Items</th><th>Total</th><th>Status</th></tr></thead><tbody id="recent"></tbody></table></div></div>
+</section>
+
+<section id="management" data-role="admin" style="display:none">
+ <div class="eyebrow" style="color:var(--orange)">Management</div>
+ <h2 class="section-title">Restaurant controls</h2>
+ <p class="sub">Manage inventory, tables and reset demo data.</p>
+ <div class="grid">
+  <div class="card food"><div class="icon">📦</div><h3>Inventory</h3><p>Track sample ingredient stock and low-stock items.</p>
+   <div class="bottom"><span class="price" id="stockCount">0 items</span><button class="add" onclick="showInventory()">View</button></div>
+  </div>
+  <div class="card food"><div class="icon">🪑</div><h3>Tables</h3><p>Monitor available and occupied tables.</p>
+   <div class="bottom"><span class="price">14 / 20</span><button class="add" onclick="toast('14 tables occupied, 6 available')">View</button></div>
+  </div>
+  <div class="card food"><div class="icon">⚙️</div><h3>Demo data</h3><p>Clear local orders and reservations for a fresh demonstration.</p>
+   <div class="bottom"><span class="price">Local storage</span><button class="add" onclick="resetData()">Reset</button></div>
+  </div>
+ </div>
+ <div class="card" id="inventoryPanel" style="display:none;margin-top:14px">
+  <h3 style="font:700 25px Georgia">Inventory</h3>
+  <div class="tablewrap"><table><thead><tr><th>Item</th><th>Stock</th><th>Status</th></tr></thead>
+  <tbody id="inventoryBody"></tbody></table></div>
+ </div>
+</section>
+
+<section id="menu" data-role="user" style="display:none"><div class="eyebrow" style="color:var(--orange)">Order from the menu</div><h2 class="section-title">Today's favourites</h2><p class="sub">Add dishes to the cart and send the order to the kitchen.</p><div class="searchbar"><input id="menuSearch" placeholder="Search dishes..." oninput="renderMenu()"><button class="add" onclick="document.getElementById('menuSearch').value='';renderMenu()">Clear</button></div><div class="grid" id="menuGrid"></div></section>
+
+
+<section id="offers" data-role="user" style="display:none">
+<div class="eyebrow" style="color:var(--orange)">Special offers</div><h2 class="section-title">Deals & rewards</h2>
+<p class="sub">Promotional and loyalty features for the restaurant system.</p>
+<div class="grid">
+<article class="card food"><div class="icon">🎁</div><h3>Weekend Treat</h3><p>Get a complimentary dessert with qualifying orders.</p><div class="bottom"><span class="price">OFFER</span><button class="add" onclick="claimOffer('Weekend Treat')">Claim</button></div></article>
+<article class="card food"><div class="icon">⭐</div><h3>Loyalty Points</h3><p>Earn points when you place an order.</p><div class="bottom"><span class="price" id="points">0 pts</span></div></article>
+<article class="card food"><div class="icon">📱</div><h3>Digital Service</h3><p>Track orders and reservations from one workspace.</p><div class="bottom"><span class="price">Active</span></div></article>
+</div></section>
+
+<section id="profile" data-role="both">
+<div class="eyebrow" style="color:var(--orange)">Account</div><h2 class="section-title">My profile</h2>
+<p class="sub">View account activity and restaurant-system role.</p>
+<div class="card"><div class="kpi-grid">
+<div class="kpi"><small>Name</small><span class="num" id="profileName">Guest</span></div>
+<div class="kpi"><small>Role</small><span class="num" id="profileRole">USER</span></div>
+<div class="kpi"><small>Orders</small><span class="num" id="profileOrders">0</span></div>
+<div class="kpi"><small>Reservations</small><span class="num" id="profileReservations">0</span></div>
+</div><div class="quick"><button onclick="go('orders')">Orders</button><button onclick="go('reservation')">Reservations</button><button onclick="updateProfile()">Update Name</button></div></div></section>
+
+<section id="analytics" data-role="admin" style="display:none">
+<div class="eyebrow" style="color:var(--orange)">Business analytics</div><h2 class="section-title">Performance</h2>
+<p class="sub">Quick restaurant KPIs calculated from demo data.</p>
+<div class="kpi-grid">
+<div class="kpi"><small>Total orders</small><span class="num" id="aOrders">0</span></div>
+<div class="kpi"><small>Revenue</small><span class="num" id="aRevenue">₹0</span></div>
+<div class="kpi"><small>Completed</small><span class="num" id="aCompleted">0</span></div>
+<div class="kpi"><small>Reservations</small><span class="num" id="aReservations">0</span></div>
+</div></section>
+
+<section id="orders" data-role="both"><div class="eyebrow" style="color:var(--orange)">Kitchen & service</div><h2 class="section-title" id="ordersTitle">Order management</h2><p class="sub" id="ordersSub">Move orders from pending to completed.</p><div class="card"><div class="tablewrap"><table><thead><tr><th>Order</th><th>Guest</th><th>Table</th><th>Items</th><th>Total</th><th>Status</th><th id="ordersActionHead">Action</th></tr></thead><tbody id="ordersBody"></tbody></table></div></div></section>
+
+<section id="reservation" data-role="both"><div class="eyebrow" style="color:var(--orange)">Reserve a table</div><h2 class="section-title" id="reservationTitle">Make a booking</h2><p class="sub" id="reservationSub">Create a reservation that is stored in the database.</p><div class="card" id="reservationFormCard"><div class="form">
+<div class="field full"><label>Guest name</label><input id="name" placeholder="Enter your name"></div>
+<div class="field"><label>Date</label><input id="date" type="date"></div>
+<div class="field"><label>Time</label><select id="time"><option>7:00 PM</option><option>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option><option>9:00 PM</option></select></div>
+<div class="field"><label>Number of guests</label><select id="guests"><option value="1">1 guest</option><option value="2">2 guests</option><option value="3">3 guests</option><option value="4">4 guests</option><option value="5">5 guests</option><option value="6">6+ guests</option></select></div>
+<div class="field"><label>Table preference</label><select id="pref"><option>Any available table</option><option>Window table</option><option>Family table</option><option>Outdoor table</option></select></div>
+<button class="reserve" onclick="reserve()">Confirm reservation</button>
+</div></div>
+<div class="card" style="margin-top:18px"><h3 style="font:700 29px Georgia" id="reservationsListTitle">Upcoming reservations</h3><div class="tablewrap"><table><thead><tr><th>Guest</th><th>Date</th><th>Time</th><th>Guests</th><th>Table</th></tr></thead><tbody id="reservationsBody"></tbody></table></div></div>
+</section>
+</main>
+<footer>© 2026 Saffron Table · Smart Restaurant Management System</footer>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div><aside class="drawer" id="drawer"><h2 style="font:700 35px Georgia">Your cart</h2><div id="cartItems"></div><h2>Total: ₹<span id="drawerTotal">0</span></h2><button class="reserve" onclick="placeOrder()">Send order to kitchen</button></aside>
+<div class="toast" id="toast"></div>
+
+<script>
+let menu=[
+ {id:1,name:"Butter Paneer",description:"Creamy tomato curry with paneer and aromatic spices.",price:320,icon:"🍛"},
+ {id:2,name:"Garden Pasta",description:"Penne pasta tossed with seasonal vegetables and herbs.",price:280,icon:"🍝"},
+ {id:3,name:"Margherita Pizza",description:"Stone-baked pizza with tomato, mozzarella and basil.",price:360,icon:"🍕"},
+ {id:4,name:"Harvest Bowl",description:"Fresh greens, roasted vegetables, grains and lemon dressing.",price:240,icon:"🥗"},
+ {id:5,name:"Saffron Burger",description:"Crispy vegetable patty, house sauce and toasted brioche.",price:260,icon:"🍔"},
+ {id:6,name:"Mango Cheesecake",description:"Silky cheesecake with a bright mango topping.",price:190,icon:"🍰"}
+];
+
+let cart=[];
+let orders=JSON.parse(localStorage.getItem("saffron_orders")||"[]");
+let reservations=JSON.parse(localStorage.getItem("saffron_reservations")||"[]");
+let currentRole="user";
+let sessionRole=null;
+
+const $=id=>document.getElementById(id);
+function save(){
+ localStorage.setItem("saffron_orders",JSON.stringify(orders));
+ localStorage.setItem("saffron_reservations",JSON.stringify(reservations));
+}
+function toast(x){
+ $("toast").textContent=x;
+ $("toast").classList.add("show");
+ setTimeout(()=>$("toast").classList.remove("show"),2200);
+}
+function go(id){$(id).scrollIntoView({behavior:"smooth",block:"start"});$("navLinks").classList.remove("show")}
+function toggleMenu(){$("navLinks").classList.toggle("show")}
+
+let loginRole="user";
+
+function setLoginRole(role){
+ loginRole=role;
+ $("loginError").textContent="";
+ $("username").value="";
+ $("password").value="";
+ if(role==="admin"){
+   $("loginEyebrow").textContent="Admin access";
+   $("loginDescription").textContent="Sign in to manage orders and reservations.";
+   $("adminTab").style.background="var(--green)";
+   $("userTab").style.background="var(--muted)";
+ }else{
+   $("loginEyebrow").textContent="User access";
+   $("loginDescription").textContent="Sign in to order food and reserve a table.";
+   $("userTab").style.background="var(--green)";
+   $("adminTab").style.background="var(--muted)";
+ }
+}
+
+// Shows/hides every element tagged data-role="user" / "admin" / "both" for the signed-in role.
+function applyRoleVisibility(role){
+ document.querySelectorAll("[data-role]").forEach(el=>{
+  const r=el.getAttribute("data-role");
+  el.style.display=(r==="both"||r===role)?"":"none";
+ });
+}
+
+function configureOrdersView(role){
+ if(role==="admin"){
+  $("ordersTitle").textContent="Order management";
+  $("ordersSub").textContent="Move orders from pending to completed.";
+  $("ordersActionHead").style.display="";
+ }else{
+  $("ordersTitle").textContent="Track your orders";
+  $("ordersSub").textContent="See the live status of every order sent to the kitchen.";
+  $("ordersActionHead").style.display="none";
+ }
+}
+
+function configureReservationView(role){
+ if(role==="admin"){
+  $("reservationTitle").textContent="All reservations";
+  $("reservationSub").textContent="Review every table booking made by guests.";
+  $("reservationFormCard").style.display="none";
+  $("reservationsListTitle").textContent="All reservations";
+ }else{
+  $("reservationTitle").textContent="Make a booking";
+  $("reservationSub").textContent="Create a reservation that is stored in the database.";
+  $("reservationFormCard").style.display="";
+  $("reservationsListTitle").textContent="Upcoming reservations";
+ }
+}
+
+function login(){
+ const u=$("username").value.trim();
+ const p=$("password").value;
+
+ const validUser=loginRole==="user" && u==="user" && p==="user123";
+ const validAdmin=loginRole==="admin" && u==="admin" && p==="admin123";
+
+ if(validUser || validAdmin){
+   currentRole=loginRole;
+   $("login").style.display="none";
+   $("roleBadge").textContent=currentRole.toUpperCase();
+   $("roleBadge").className="status "+(currentRole==="admin"?"role-admin":"role-user");
+   applyRoleVisibility(currentRole);
+   configureOrdersView(currentRole);
+   configureReservationView(currentRole);
+   loadAll();
+ }else{
+   $("loginError").textContent="Invalid username or password";
+ }
+}
+["username","password"].forEach(id=>$(id).addEventListener("keydown",e=>{if(e.key==="Enter")login()}));
+
+function logout(){
+ $("login").style.display="grid";
+ $("loginError").textContent="";
+ setLoginRole("user");
+ currentRole="user";
+ cart=[];
+ renderCart();
+}
+
+function loadAll(){
+ renderMenu(); renderOrders(); renderCart(); renderReservations(); loadDashboard(); updateCards();
+}
+
+function renderMenu(){
+ const q=(document.getElementById("menuSearch")?.value||"").toLowerCase().trim();
+ const list=menu.filter(x=>(x.name+" "+x.description).toLowerCase().includes(q));
+ $("menuGrid").innerHTML=list.length?list.map(x=>`<article class="card food"><div class="icon">${x.icon}</div><h3>${x.name}</h3><p>${x.description}</p><div class="bottom"><span><span class="price">₹${x.price.toLocaleString("en-IN")}</span> <span class="rating">★ 4.8</span></span><button class="add" onclick="add(${x.id})">Add to cart</button></div></article>`).join(""):'<div class="empty">No dishes found.</div>';
+}
+function add(id){
+ const d=menu.find(x=>x.id===id),x=cart.find(x=>x.id===id);
+ if(x)x.qty++; else cart.push({id:d.id,name:d.name,price:d.price,qty:1});
+ renderCart();toast(d.name+" added");
+}
+function change(id,n){
+ let x=cart.find(x=>x.id===id);
+ x.qty+=n;if(x.qty<=0)cart=cart.filter(y=>y.id!==id);
+ renderCart();
+}
+function renderCart(){
+ let c=cart.reduce((a,x)=>a+x.qty,0),t=cart.reduce((a,x)=>a+x.price*x.qty,0);
+ $("cc").textContent=c;$("ct").textContent=t.toLocaleString("en-IN");
+ $("drawerTotal").textContent=t.toLocaleString("en-IN");
+ $("cartItems").innerHTML=cart.length?cart.map(x=>`
+ <div class="cartrow"><span><b>${x.name}</b><br>₹${x.price} × ${x.qty}</span>
+ <span class="qty"><button onclick="change(${x.id},-1)">−</button> ${x.qty}
+ <button onclick="change(${x.id},1)">+</button></span></div>`).join("")
+ :"<p class='sub'>Your cart is empty.</p>";
+}
+function openCart(){$("drawer").classList.add("open");$("overlay").classList.add("show")}
+function closeCart(){$("drawer").classList.remove("open");$("overlay").classList.remove("show")}
+
+function placeOrder(){
+ if(!cart.length)return toast("Cart is empty");
+ let total=cart.reduce((a,x)=>a+x.price*x.qty,0);
+ let items=cart.map(x=>({name:x.name,qty:x.qty,price:x.price}));
+ let id=orders.length?Math.max(...orders.map(o=>o.id))+1:1;
+ const guestName = localStorage.getItem("saffron_guest_name") || "Guest";
+orders.unshift({id,guest_name:guestName,table_name:"New order",items,total,status:"Pending"});
+ cart=[];save();renderCart();closeCart();renderOrders();loadDashboard();
+ toast("Order #"+id+" sent to kitchen");
+}
+function renderOrders(){
+ let cls=s=>s.replaceAll(" ",""); const name=localStorage.getItem("saffron_guest_name")||"Guest";
+ const list=currentRole==="admin"?orders:orders.filter(o=>(o.guest_name||"Guest")===name);
+ $("ordersBody").innerHTML=list.length?list.map(o=>{let flow=["Pending","Preparing","Ready","Completed"],p=flow.indexOf(o.status);let act=currentRole==="admin"?`<td>${p>=0&&p<3?`<button class="add" onclick="nextStatus(${o.id},'${flow[p+1]}')">Next</button>`:"—"}</td>`:`<td>${o.status==="Pending"?`<button class="add" onclick="cancelOrder(${o.id})">Cancel</button>`:"—"}</td>`;return `<tr><td>#${o.id}</td><td>${o.guest_name||"Guest"}</td><td>${o.table_name}</td><td>${o.items.reduce((a,x)=>a+x.qty,0)} items</td><td>₹${o.total.toLocaleString("en-IN")}</td><td><span class="status ${cls(o.status)}">${o.status}</span></td>${act}</tr>`}).join(""):"<tr><td colspan='7' class='empty'>No orders yet.</td></tr>";
+ $("recent").innerHTML=orders.slice(0,5).map(o=>`<tr><td>#${o.id}</td><td>${o.guest_name||"Guest"}</td><td>${o.table_name}</td><td>${o.items.reduce((a,x)=>a+x.qty,0)} items</td><td>₹${o.total.toLocaleString("en-IN")}</td><td><span class="status ${cls(o.status)}">${o.status}</span></td></tr>`).join("");
+}
+function nextStatus(id,status){
+ if(currentRole!=="admin")return;
+ let o=orders.find(x=>x.id===id);if(o)o.status=status;
+ save();renderOrders();loadDashboard();toast("Order updated to "+status);
+}
+function reserve(){
+ if(currentRole!=="user")return;
+ if(!$("name").value.trim())return toast("Enter guest name"); localStorage.setItem("saffron_guest_name",$("name").value.trim());
+  localStorage.setItem("saffron_guest_name",$("name").value.trim());
+ if(!$("date").value)return toast("Select a date");
+ let id=reservations.length?Math.max(...reservations.map(r=>r.id))+1:1;
+ reservations.unshift({
+  id,guest_name:$("name").value.trim(),
+  date:$("date").value,time:$("time").value,guests:$("guests").value,
+  table_preference:$("pref").value
+ });
+ save();renderReservations();
+ $("name").value="";toast("Reservation confirmed 🎉");
+}
+function renderReservations(){
+ $("reservationsBody").innerHTML=reservations.length?reservations.map(r=>`
+ <tr><td>${r.guest_name}</td><td>${r.date}</td><td>${r.time}</td><td>${r.guests}</td><td>${r.table_preference}</td></tr>`).join("")
+ :"<tr><td colspan='5' class='sub'>No reservations yet.</td></tr>";
+}
+
+function claimOffer(name){toast(name+" applied for this demo");}
+function updateProfile(){
+ const old=localStorage.getItem("saffron_guest_name")||"Guest"; const n=prompt("Enter guest name:",old);
+ if(!n||!n.trim())return; localStorage.setItem("saffron_guest_name",n.trim()); updateCards(); renderOrders(); toast("Profile updated");
+}
+function updateCards(){
+ const n=localStorage.getItem("saffron_guest_name")||"Guest";
+ $("profileName").textContent=n; $("profileRole").textContent=currentRole.toUpperCase();
+ const mine=orders.filter(o=>(o.guest_name||"Guest")===n);
+ $("profileOrders").textContent=currentRole==="admin"?orders.length:mine.length;
+ $("profileReservations").textContent=currentRole==="admin"?reservations.length:reservations.filter(r=>r.guest_name===n).length;
+ $("points").textContent=((currentRole==="admin"?orders.length:mine.length)*10)+" pts";
+ $("aOrders").textContent=orders.length;
+ $("aRevenue").textContent="₹"+orders.filter(o=>o.status==="Completed").reduce((s,o)=>s+o.total,0).toLocaleString("en-IN");
+ $("aCompleted").textContent=orders.filter(o=>o.status==="Completed").length;
+ $("aReservations").textContent=reservations.length;
+}
+function cancelOrder(id){
+ const o=orders.find(x=>x.id===id); if(!o||o.status!=="Pending")return toast("Order cannot be cancelled");
+ o.status="Cancelled"; save(); renderOrders(); loadDashboard(); updateCards(); toast("Order #"+id+" cancelled");
+}
+function showInventory(){
+  const stock=[
+    ["Paneer","12 kg","Good"],
+    ["Tomato","4 kg","Good"],
+    ["Mozzarella","2 kg","Low"],
+    ["Pasta","8 kg","Good"],
+    ["Mango","1.5 kg","Low"]
+  ];
+  $("inventoryPanel").style.display="";
+  $("inventoryBody").innerHTML=stock.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td><span class="status ${x[2]==="Low"?"Pending":"Ready"}">${x[2]}</span></td></tr>`).join("");
+  $("stockCount").textContent=stock.length+" ingredients";
+}
+function resetData(){
+  if(!confirm("Clear all demo orders and reservations?"))return;
+  orders=[];reservations=[];save();loadAll();toast("Demo data cleared");
+}
+
+function loadDashboard(){
+ let sales=orders.filter(o=>o.status==="Completed").reduce((a,o)=>a+o.total,0);
+ let completed=orders.filter(o=>o.status==="Completed").length;
+ let inProgress=orders.filter(o=>o.status!=="Completed").length;
+ $("sales").textContent="₹"+sales.toLocaleString("en-IN");
+ $("done").textContent=completed;$("progress").textContent=inProgress+" in progress";
+}
+const today=new Date().toISOString().slice(0,10); $("date").min=today; $("date").value=today;
+</script>
+</body></html>
